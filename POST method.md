@@ -34,12 +34,12 @@ fun testFunc():String{
     return "testFunc"
 }
 
-fun wrapperFunc(hanlder ()->String){
+fun wrapperFunc(handler:()->String){
     var a = handler()
     println(a)
 }
 
-fun main(args* Array<String>){
-    wrapperFunc(testFunc)
+fun main(args: Array<String>){
+    wrapperFunc(::testFunc)
 }
 ```
