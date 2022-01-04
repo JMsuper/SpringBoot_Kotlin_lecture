@@ -27,7 +27,8 @@ data class UserRequest(
 )
 ```
 - 코틀린 더블콜론(::)
-더블콜론(::)은 함수 혹은 클래스를 parameter로 전달할 때 사용한다.
+더블콜론(::)은 함수 혹은 클래스를 parameter로 전달할 때 사용한다.<br>
+또한, 코틀린에서 Java 클래스를 사용할 때 사용한다.
 ```
 fun testFunc():String{
     return "testFunc"
