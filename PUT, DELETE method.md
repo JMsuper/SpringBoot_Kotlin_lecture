@@ -89,4 +89,21 @@ data class Result(
 
 # DELETE method
 DELETE method에서는 query param과 pathVariable을 사용한다.
+```
+    @DeleteMapping(path=["/delete-mapping"])
+    fun deleteMapping(
+        @RequestParam(value="name") _name : String,
+        @RequestParam(value="age") _age : Int
+    ):String{
+        println(_name)
+        println(_age)
+        return _name+" "+_age
+    }
 
+    @DeleteMapping(path=["/delete-mapping/name/{name}/age/{age}"])
+    fun deleteMappingPath(@PathVariable(value="name") _name:String, @PathVariable(value = "age") _age:Int): String {
+        println(_name)
+        println(_age)
+        return _name+" "+_age
+    }
+```
