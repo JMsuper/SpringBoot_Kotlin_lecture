@@ -87,5 +87,6 @@ data class Result(
 코틀린에서 var은 수정가능한 변수에 사용되고, val은 수정을 금지할 변수에 사용된다.<br>
 다만, val의 경우 객체의 reference만 수정되지 않을 뿐, 주소가 가리키는 메모리의 값은 수정될 수 있다.
 
-
+# DELETE method
+DELETE method에서는 query param과 pathVariable을 사용한다.
 
