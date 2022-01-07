@@ -87,11 +87,130 @@ data class UserRequest(
 }
 ```
 data class에 Validation을 적용시킬 때는 `@field` 어노테이션을 적용시킨뒤 `@field: NotNull`과 같은 형식으로 작성해야 한다.
-                                
-  
-  
-  
-  
-  
-  
+왜냐하면, `()`안에 있는 프로퍼티들에 어노테이션을 적용시키는 것은 객체 생성자에 적용되기 때문이다.
+코틀린 코드를 바이트 코드로 변환시켜 위 내용들을 확인할 수 있다.
 
+##### data class 바이트 코드 변환
+코틀린 코드
+```
+data class TestRequest(
+
+    @Size(min = 2, max = 8)
+    @NotNull
+    var name:String?=null,
+)                                     
+```  
+자바 코드  
+```
+   public TestRequest(@Size(min = 2,max = 8) @NotNull @Nullable String name) {
+      this.name = name;
+   }                                     
+```  
+코틀린 코드에서 `@ㄹield`를 적용시키지 않았을 때 자바코드에서 필드에 Validation이 적용되지 않고 생성자에 적용되는 것을 볼 수 있다.
+자바에서 필드에 Validation을 적용하려면, 생성자가 아닌
+```
+    @NotBlank
+    private String name;                                     
+```  
+와 같이 필드선언위에 어노테이션을 적용해야 한다.
+
+코틀린 코드                                     
+```   
+data class TestRequest(
+    @field: Size(min = 2, max = 8)
+    @field: NotNull
+    var name:String?=null,
+)                                     
+```                                     
+자바 코드                                     
+```   
+@Size(
+      min = 2,
+      max = 8
+   )
+   @NotNull
+   @Nullable
+   private String name;                                   
+```                                          
+코틀린에 `@field`어노테이션을 적용했을 때 자바에서 생성자가 아닌 필드에 Validation이 적용되는 것을 확인할 수 있다.
+                                     
+#### validation을 직접 수행하기                                     
+Bean Validation에 있는 유효성 검사가 아닌, 사용자 임의의 유효성 검사를 진행하려면 다음과 같이 작성해야 한다.
+```  
+data class UserRequest(
+    var createdAt:String?=null // yyyy-MM-dd HH:mm:ss   ex) 2020-10-02 13:00:00
+){
+    @AssertTrue(message = "생성일자의 패턴은 yyyy-MM-dd HH:mm:ss 여야 합니다.")
+    private fun isValidCreatedAt():Boolean{ // 정상 true, 비정상 false
+        return try{
+            LocalDateTime.parse(this.createdAt, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+            true
+        }catch (e:Exception){
+            false
+        }
+    }
+}                                     
+```                                     
+위 코드는 `createdAt`이라는 프로퍼티가 생성일자 패턴과 일치하는지 유효성 검사하는 코드이다.
+이때, `@AssertTrue`는 객체가 생성될 때 매핑된 메소드를 통해 유효성 검사를 수행하도록 하는 어노테이션이다.
+`True`이므로 메소드가 `true`를 리턴하면 유효성 검사를 통과한 것이고 `false`를 리턴하면 실패한 것이다.
+`@AssertTrue` 이외에 `@AssertFalse`도 존재한다.                                     
+                                     
+
+#### 유효성 검사 실패시 서버 Exception이 아닌 클라이언트에게 4xx와 에러메시지를 전달하기           
+```
+@RestController
+@RequestMapping("/api")
+class PutApiController{
+
+    @PutMapping(path=["/put-mapping/object"])
+    fun putMappingObject(@Valid @RequestBody userRequest: UserRequest,bindingResult: BindingResult): ResponseEntity<String> {
+        if(bindingResult.hasErrors()){
+            val msg = StringBuilder()
+            bindingResult.allErrors.forEach{
+                val field = it as FieldError
+                val message = it.defaultMessage
+                msg.append(field.field+" : "+message+"\n")
+            }
+            return ResponseEntity.badRequest().body(msg.toString())
+        }
+
+        return ResponseEntity.ok("OK")
+    }
+}                                     
+```                                  
+`@Valid`는 프로퍼티, 메소드 파라미터, 메소드 리턴값에 대해서 유효성 검사를 진행하라는 어노테이션이다.
+위 코드에서 `@Valid`를 붙임으로서 UserRequest에 있는 Validation이 진행된다.
+만약, 위 메소드에서 BindingResult를 매개변수로 받지 않는다면, 서버 Exception이 발생할 것이며, 클라이언트는 5xx 응답을 받는다.
+BindingResult를 매개변수로 받으면 유효성 검사 실패시 Exception을 발생시키지 않고, 메소드 바디에서 유효성 검사 결과를
+확인할 수 있다. BindingResult의 `hasError()` 메소드를 사용하여 검사 결과를 확인하고 그에 맞는 `ResponseEntity`를 리턴한다.
+                                     
+                                     
+### Custom Validation 작성법
+Custom Valiation을 작성하기 위해 어노테이션 클래스와 Validator 클래스가 필요하다.
+
+Annotation 클래스
+```
+@Constraint(validatedBy = [StringFormatDateTimeValidator::class])
+@Target(
+    AnnotationTarget.FIELD,
+    AnnotationTarget.PROPERTY_GETTER,
+    AnnotationTarget.PROPERTY_SETTER
+)
+@Retention(AnnotationRetention.RUNTIME)
+@MustBeDocumented
+annotation class StringFormatDateTime(
+    val pattern: String = "yyyy-MM-dd HH:mm:ss",
+    val message: String = "시간 형식이 유효하지 않습니다.",
+    val groups: Array<KClass<*>> = [],
+    val payload: Array<KClass<out Payload>> = []
+)
+```
+`@Constriant` : 해당 어노테이션과 Validator를 매핑한다.
+`@Target` : 어노테이션의 타겟팅 가능한 영역을 명시한다.
+`@Retension` : 어노테이션이 적용되는 시점 혹은 Scope를 명시한다.
+`@MustBeDocumented` : Generated Documentation에 해당 Annotation도 포함될 수 있는지를 나타낸다.
+                                     
+                                     
+                                     
+                                     
