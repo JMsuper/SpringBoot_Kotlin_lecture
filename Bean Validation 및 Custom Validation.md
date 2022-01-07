@@ -1,7 +1,7 @@
 # Bean Validation 및 Custom Validation
 참고자료 : https://meetup.toast.com/posts/223<br>
 참고자료 : https://medium.com/@SlackBeck/javabean-validation%EA%B3%BC-hibernate-validator-%EA%B7%B8%EB%A6%AC%EA%B3%A0-spring-boot-3f31aee610f5<br>
-참고자료 : https://www.hanumoka.net/2019/01/06/java-20190106-java-pojo-vs-bean/
+참고자료 : https://www.hanumoka.net/2019/01/06/java-20190106-java-pojo-vs-bean/<br><br>
 애플리케이션에서 데이터 유효성 검사 로직은 다음과 같은 문제를 가지고 있다.
 - 애플리케이션 전체에 분산되어 있다.
 - 코드 중복이 심하다.
@@ -86,9 +86,9 @@ data class UserRequest(
     }
 }
 ```
-data class에 Validation을 적용시킬 때는 `@field` 어노테이션을 적용시킨뒤 `@field: NotNull`과 같은 형식으로 작성해야 한다.
-왜냐하면, `()`안에 있는 프로퍼티들에 어노테이션을 적용시키는 것은 객체 생성자에 적용되기 때문이다.
-코틀린 코드를 바이트 코드로 변환시켜 위 내용들을 확인할 수 있다.
+data class에 Validation을 적용시킬 때는 `@field` 어노테이션을 적용시킨뒤 `@field: NotNull`과 같은 형식으로 작성해야 한다.<br>
+왜냐하면, `()`안에 있는 프로퍼티들에 어노테이션을 적용시키는 것은 객체 생성자에 적용되기 때문이다.<br>
+코틀린 코드를 바이트 코드로 변환시켜 위 내용들을 확인할 수 있다.<br><br>
 
 ##### data class 바이트 코드 변환
 코틀린 코드
@@ -106,7 +106,7 @@ data class TestRequest(
       this.name = name;
    }                                     
 ```  
-코틀린 코드에서 `@ㄹield`를 적용시키지 않았을 때 자바코드에서 필드에 Validation이 적용되지 않고 생성자에 적용되는 것을 볼 수 있다.
+코틀린 코드에서 `@ㄹield`를 적용시키지 않았을 때 자바코드에서 필드에 Validation이 적용되지 않고 생성자에 적용되는 것을 볼 수 있다.<br>
 자바에서 필드에 Validation을 적용하려면, 생성자가 아닌
 ```
     @NotBlank
@@ -132,7 +132,7 @@ data class TestRequest(
    @Nullable
    private String name;                                   
 ```                                          
-코틀린에 `@field`어노테이션을 적용했을 때 자바에서 생성자가 아닌 필드에 Validation이 적용되는 것을 확인할 수 있다.
+코틀린에 `@field`어노테이션을 적용했을 때 자바에서 생성자가 아닌 필드에 Validation이 적용되는 것을 확인할 수 있다.<br>
                                      
 #### validation을 직접 수행하기                                     
 Bean Validation에 있는 유효성 검사가 아닌, 사용자 임의의 유효성 검사를 진행하려면 다음과 같이 작성해야 한다.
@@ -151,10 +151,10 @@ data class UserRequest(
     }
 }                                     
 ```                                     
-위 코드는 `createdAt`이라는 프로퍼티가 생성일자 패턴과 일치하는지 유효성 검사하는 코드이다.
-이때, `@AssertTrue`는 객체가 생성될 때 매핑된 메소드를 통해 유효성 검사를 수행하도록 하는 어노테이션이다.
-`True`이므로 메소드가 `true`를 리턴하면 유효성 검사를 통과한 것이고 `false`를 리턴하면 실패한 것이다.
-`@AssertTrue` 이외에 `@AssertFalse`도 존재한다.                                     
+위 코드는 `createdAt`이라는 프로퍼티가 생성일자 패턴과 일치하는지 유효성 검사하는 코드이다.<br>
+이때, `@AssertTrue`는 객체가 생성될 때 매핑된 메소드를 통해 유효성 검사를 수행하도록 하는 어노테이션이다.<br>
+`True`이므로 메소드가 `true`를 리턴하면 유효성 검사를 통과한 것이고 `false`를 리턴하면 실패한 것이다.<br>
+`@AssertTrue` 이외에 `@AssertFalse`도 존재한다.<br><br>                                     
                                      
 
 #### 유효성 검사 실패시 서버 Exception이 아닌 클라이언트에게 4xx와 에러메시지를 전달하기           
@@ -179,16 +179,18 @@ class PutApiController{
     }
 }                                     
 ```                                  
-`@Valid`는 프로퍼티, 메소드 파라미터, 메소드 리턴값에 대해서 유효성 검사를 진행하라는 어노테이션이다.
-위 코드에서 `@Valid`를 붙임으로서 UserRequest에 있는 Validation이 진행된다.
-만약, 위 메소드에서 BindingResult를 매개변수로 받지 않는다면, 서버 Exception이 발생할 것이며, 클라이언트는 5xx 응답을 받는다.
-BindingResult를 매개변수로 받으면 유효성 검사 실패시 Exception을 발생시키지 않고, 메소드 바디에서 유효성 검사 결과를
-확인할 수 있다. BindingResult의 `hasError()` 메소드를 사용하여 검사 결과를 확인하고 그에 맞는 `ResponseEntity`를 리턴한다.
+`@Valid`는 프로퍼티, 메소드 파라미터, 메소드 리턴값에 대해서 유효성 검사를 진행하라는 어노테이션이다.<br>
+위 코드에서 `@Valid`를 붙임으로서 UserRequest에 있는 Validation이 진행된다.<br>
+만약, 위 메소드에서 BindingResult를 매개변수로 받지 않는다면, 서버 Exception이 발생할 것이며, 클라이언트는 5xx 응답을 받는다.<br>
+BindingResult를 매개변수로 받으면 유효성 검사 실패시 Exception을 발생시키지 않고, 메소드 바디에서 유효성 검사 결과를<br>
+확인할 수 있다. BindingResult의 `hasError()` 메소드를 사용하여 검사 결과를 확인하고 그에 맞는 `ResponseEntity`를 리턴한다.<br><br>
                                      
                                      
 ### Custom Validation 작성법
-Custom Valiation을 작성하기 위해 어노테이션 클래스와 Validator 클래스가 필요하다.
-
+`@AssertTrue`어노테이션을 사용하여 유효성 검사 메소드를 만들 수 있지만, 반복적으로 사용되는 경우<br>
+Custom Validation을 만드는 것이 더 유용하다. <br>
+Custom Validation을 작성하기 위해 어노테이션 클래스와 Validator 클래스가 필요하다.<br>
+<br>
 Annotation 클래스
 ```
 @Constraint(validatedBy = [StringFormatDateTimeValidator::class])
@@ -206,11 +208,28 @@ annotation class StringFormatDateTime(
     val payload: Array<KClass<out Payload>> = []
 )
 ```
-`@Constriant` : 해당 어노테이션과 Validator를 매핑한다.
-`@Target` : 어노테이션의 타겟팅 가능한 영역을 명시한다.
-`@Retension` : 어노테이션이 적용되는 시점 혹은 Scope를 명시한다.
+`@Constriant` : 해당 어노테이션과 Validator를 매핑한다.<br>
+`@Target` : 어노테이션의 타겟팅 가능한 영역을 명시한다.<br>
+`@Retension` : 어노테이션이 적용되는 시점 혹은 Scope를 명시한다.<br>
 `@MustBeDocumented` : Generated Documentation에 해당 Annotation도 포함될 수 있는지를 나타낸다.
                                      
-                                     
-                                     
-                                     
+```
+// ConstraintValidator<어노테이션, 입력받는 데이터 타입>
+class StringFormatDateTimeValidator : ConstraintValidator<StringFormatDateTime,String>{
+    private var pattern : String?=null
+    override fun initialize(constraintAnnotation: StringFormatDateTime?) {
+        this.pattern = constraintAnnotation?.pattern
+    }
+    // 정상이면 True, 비정상이면 False
+    override fun isValid(value: String?, context: ConstraintValidatorContext?): Boolean {
+        return try{
+            // 파싱해서 에러가 발생하면 Exception이 발생할 것이다.
+            LocalDateTime.parse(value, DateTimeFormatter.ofPattern(pattern))
+            true
+        }catch (e: Exception){
+            false
+        }
+    }
+}  
+```                                     
+`isValid()`메소드는 반드시 override해야하는 메소드이다. 해당 메소드에서 유효성 검사를 진행하는 것이다.                                     
