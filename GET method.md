@@ -1,14 +1,14 @@
 # GET method
 ### 참고자료
 @RestController : https://dncjf64.tistory.com/288<br>
-@ResponseBody : https://cheershennah.tistory.com/179
-@RequestMapping : https://mungto.tistory.com/436
+@ResponseBody : https://cheershennah.tistory.com/179<br>
+@RequestMapping : https://mungto.tistory.com/436<br>
 data class : https://codechacha.com/ko/data-classes-in-kotlin/
 ### 어노테이션
 - @RestController : 해당 클래스가 REST하게 동작하도록 한다.<br>
-RestController는 @Controller에 @ResponseBody를 더한 것이다. @Controller는 Spring MVC에서 View에 표시될 데이터가 있는<br>
+RestController는 @Controller에 @ResponseBody를 더한 것이다. @Controller는 HttpRequest에 대해 처리하는 controller 클래스에 지정되는 어노테이션이다. Spring MVC에서 View에 표시될 데이터가 있는<br>
 Model객체를 만들고 올바른 뷰를 선택하는 일을 담당한다. @ResponseBody는 자바 객체를 HTTP Response Body에 변환하여 담는다.<br>
-RestController는 이러한 두가지 기능을 함께 수행하도록 한다. Spring에서 RESTful 웹 서비스를 보다 쉽게 개발할 수 있도록<br>
+RestController는 이러한 두가지 기능을 함께 수행하도록 한다. Spring에서 RESTful 웹 서비스를 보다 쉽게 개발할 수 있도록
 Spring 4.0에서 추가되었다.<br><br>
 - @RequestMapping
 서버에 uri요청이 들어왔을 때, 해당 요청을 특정 메소드에 매핑하기 위해 사용한다.<br>
