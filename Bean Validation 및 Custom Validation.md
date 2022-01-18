@@ -112,7 +112,8 @@ data class TestRequest(
     @NotBlank
     private String name;                                     
 ```  
-와 같이 필드선언위에 어노테이션을 적용해야 한다.
+와 같이 필드선언위에 어노테이션을 적용해야 한다. 왜냐하면 코틀린은 `Annotation use-site target`을 지정하지 않은 경우 어노테이션의 `@Target`의 가능여부를 조사하여 우선순위가 높은 `@Target`에 적용되기 때문이다. 위와 같은 경우는 `Annotation use-site target`를
+지정하지 않아, 우선순위가 가장 높은 `constructor param`에 어노테이션이 적용되게 된다.
 
 코틀린 코드                                     
 ```   
