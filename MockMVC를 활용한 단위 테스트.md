@@ -35,10 +35,12 @@ class ExceptionApiControllerTest {
 ###### `@WebMvcTest`
 - ()에 작성된 클래스만 실제로 로드하여 테스트를 진행
 - 매개변수를 지정해주지 않으면 `@Controller`,`@RestController`,`@RestControllerAdvice`등 컨트롤러와 연관된 Bean이 모두 로드됨
+  다만, `@Component`, `@Service`, `@Repository`와 같은 빈들은 로드되지 않는다.
 - 웹에서 테스트하기 힘든 컨트롤러를 테스트하는 데 적합하다
 - 웹상에서의 요청과 응답에 대해 테스트 가능하다
 - `@SpringBootTest` 어노테이션보다 가볍게 테스트할 수 있다
-- 전체 자동 구성을 사용하지 않고, MVC 테스트와 관련된 구성만 적용한다.
+- 전체 자동 구성을 사용하지 않고, MVC 테스트와 관련된 구성만 적용한다. Repository와 Service같은 빈들이 필요하다면 
+  `@SpringBootTest`를 사용하는 것이 적절하다.
 
 `@AutoConfigureMockMvc`없이 `@WebMvcTest`만 어노테이트해도 mockMvc가 생성되어 테스트는 정상작동한다.<br>
 mockMvc를 생성하는 것은 `@WebMvcTest`이다. `@AutoConfigureMockMvc`를 추가로 어노테이트하는 이유는,<br>
