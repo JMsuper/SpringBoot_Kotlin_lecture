@@ -2,6 +2,7 @@
 참고링크 : http://clipsoft.co.kr/wp/blog/tddtest-driven-development-%EB%B0%A9%EB%B2%95%EB%A1%A0/<br>
 참고링크 : https://velog.io/@woo00oo/SpringBoot-Test-2<br>
 참고링크 : https://www.youtube.com/watch?v=SFVWo0Z5Ppo
+참고링크 : https://meetup.toast.com/posts/124
 ## TDD(Test driven development)
 <img src="https://github.com/JMsuper/springboot-lecture-kotlin/blob/main/img/TDD.JPG" width=600><br>
 TDD는 테스트케이스를 작성 한 후 실제 코드를 개발하여 리펙토링하는 절차를 따른다.<br>
@@ -53,6 +54,10 @@ mockMvc에 대해 더 세세한 컨트롤을 할 수 있기 때문이다.<br>
 - Controller의 API를 테스트하는 용도인 MockMvc 객체를 주입 받음
 - perform() 메소드를 활용하여 컨트롤러의 동작을 확인할 수 있음
 - andExpect(), andDo(), andReturn()등의 메소드를 같이 활용함
+###### `@SpringBootTest`
+- 테스트에 사용할 수 있는 ApplicationContext를 생성하고 조작할 수 있게함
+- 필요로 하는 특정 Configuration을 선택가능
+- 테스트할 Controller를 지정할 수 ㅣㅇㅆ음
 ###### `@Test`
 - 어노테이트된 메소드가 테스트 메소드임을 나타낸다
 - 해당 메소드는 private, static이면 안되며, value를 리턴해서는 안된다.
