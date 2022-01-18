@@ -55,5 +55,3 @@ initBinder메소드는 해당 컨트롤러의 모든 메소드에서 실행되�
 - InitBinder : https://goodgid.github.io/Spring-MVC-InitBinder/
 - ModelAttribute : https://mangkyu.tistory.com/72
 - Exceptionhandler : https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/bind/annotation/ExceptionHandler.html
-- 
-- 
