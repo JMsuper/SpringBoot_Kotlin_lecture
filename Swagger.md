@@ -1,6 +1,6 @@
 # Swagger
-Swagger는 API에 대한 문서를 자동으로 작성해주는 라이브러리를 말한다. 또한 UI에서 직접 API를 테스트 해볼 수 있기 때문에
-API 명세, 테스트등에 사용된다.<br>
+Swagger는 API에 대한 문서를 자동으로 작성해주는 라이브러리를 말한다.<br>
+또한 UI에서 직접 API를 테스트 해볼 수 있기 때문에 API 명세, 테스트등에 사용된다.<br>
 swagger링크 : http://127.0.0.1:8080/swagger-ui.html (swagger를 스프링에 적용시키고 서버를 작동시키면 해당 url에서 api문서
 확인가능)
 
